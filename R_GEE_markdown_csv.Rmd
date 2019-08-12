@@ -1,0 +1,84 @@
+---
+title: "R_GEE_markdown_csv"
+author: "Fulbert Gnonlonfoun"
+date: "05/08/2019"
+output:
+  html_document: default
+  word_document: default
+---
+
+
+### Estabelecimento e documentação de procedimentos para ingestão e manipulação de dados derivados de sensoriamento remoto em formatos raster e vetorial utilizando-se de rotinas na linguagem de programação R:
+
+![**limguagem R**](Rlogo.png)
+
+![**software R studio**](RStudio.png)
+
+Segundo O manual do R1, o R é definido como um ambiente de programação, com um conjunto integrado de ferramentas para manipulação de dados, cálculos e apresentação gráfica **(VENABLES; SMITH, 2010)**. Vale precisar que o R é a linguagem de programação e o Rstudio é o software. 
+
+Mas porque usar o R?
+R além de ser um programa gratuita e poderosa, está se tornando a linguagem padrão em projetos de Data Science. Ele vem se tornando uns dos principais “idiomas” de Cientistas e Analistas de Dados e está liderando a revolução proporcionada pelo Big Data Analytics. A linguagem R é simplesmente a melhor linguagem estatística disponível hoje para análise de Data e se tornando quase um pré-requisito para pós-graduação e consultorias na área de Ecologia.
+Então nós vamos usar esse poderoso programa para analisar nossos dados abaixado do google Earth engine.
+
+Analise dos dados .csv abaixado do GEE: 
+Primeiro passo vamos instalar e carregar os pacotes que podem processar os nossos dados:
+
+```{r}
+library(ggplot2)
+library(ggthemr)  # para definir um tema personalizado
+library(forcats)  #para reordenar variáveis categóricas
+
+```
+
+
+agora nos vamos abaixar os dados Excel.csv do google drive e carregar o repositório no Rstudio. 
+
+```{r}
+setwd("D:/fulbert/02_Rstudio/Iniciaçao_r/00_Script")
+```
+
+vamos nomear os dados com os nome originais dos aquivos
+```{r}
+NP_forest_gain <- read.csv("NP_forest_gain.csv")
+NP_forest_loss <- read.csv("NP_forest_loss.csv")
+
+```
+
+vamos Criar coluna identificadora para ganhos e para perdas
+
+```{r}
+NP_forest_gain$type <- "Gain"
+NP_forest_loss$type <- "Loss"
+
+```
+
+vamos juntas os dois objetos ganhos e perdars 
+```{r}
+forest_change <- rbind(NP_forest_gain, NP_forest_loss)
+
+```
+
+Isso nos permitira de ter uma visão global dos objetos plotados 
+```{r}
+(forest_barplot <- ggplot(forest_change, aes(x = NAME, y = sum/GIS_AREA, 
+                                             colour = fct_rev(type), 
+                                             fill = fct_rev(type))) +
+    geom_bar(stat = "identity", position = "dodge") +
+    labs(x = NULL, y = "Mudanças florestais(% da area dos parques)\n") +
+    # A expansão da escala remove o espaço vazio abaixo das barras
+    scale_y_continuous(expand = c(0, 0)) +
+    theme(text = element_text(size = 12),  # tamanho de fonte varia com o numero escolhido
+          legend.position = c(0.1, 0.85),  # muda o posicionamento da legenda
+          legend.title = element_blank(),  # título da legenda
+          legend.background = element_rect(color = "black", 
+                                           fill = "transparent",   # remove o fundo branco por trás da legenda
+                                           linetype = "blank")))
+
+```
+
+O codigo em baixo vai nos permitir de salva a plot em .png
+```{r}
+ggsave(forest_barplot, filename = "forestas_barplot.png",
+       height = 5, width = 7)
+```
+

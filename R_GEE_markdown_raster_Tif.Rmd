@@ -1,0 +1,56 @@
+---
+title: "R_GEE_markdown_raster_Tif"
+author: "Fulbert Gnonlonfoun"
+date: "08/08/2019"
+output:
+  html_document: default
+  word_document: default
+---
+### Analise dos dados raster abaixado do GEE
+Primeiro passo vamos instalar e carregar os pacotes que podem processar as dados geospaciais. R também contém muitas funções que permitem processar, visualizar e analisar dados espaciais. Eles estão contidos em vários pacotes (conjuntos de funções), entre outros:GIS - sp, rgdal, rgeos, sf, raster,caret e caretEnsemble estrelas, viridis, rasterVis Geoestatística gstat, geoR, geoRglm. Vamos instalar alguns desses pacotes e carregar los.
+```{r}
+# Load packages
+library(sp)
+library(rgdal)
+library(raster)
+library(ggplot2)
+library(viridis)
+library(rasterVis)
+```
+
+Depois Disso, vamos definir nosso diretor onde já foram abaixado previamente as imagens .tif do google drive.
+
+```{r}
+setwd("D:/fulbert/02_Rstudio/Iniciaçao_r/00_Script")
+```
+
+As imagens abaixadas são oito (08) no total.  Para cada um, vamos criar um objeto correspondente ao seu nome. Por exemplo. depois Vamos chamar o objeto criado para ver os diferentes componentes dele. 
+
+```{r}
+# loss 1
+Parques_loss1 <- raster('ParquesLoss_1.tif')
+Parques_loss1
+```
+
+Vamos chamar as imagens: 
+```{r}
+image(Parques_loss1, 
+      main="Boucle de la penjari",
+      sub="Loss",
+      xlab = "Latitude",
+      ylab = "Longitude",
+      col.main="black", col.lab="black", col.sub="black",
+      cex.main=1.6, cex.lab=1.2, cex.sub=1.4)
+```
+
+Agorar vamos plotar esses imagens para ter uma idea clara da sua representaçao.
+```{r}
+plot(Parques_loss1,
+     main="Penjari_Perda_img_sentinel2",
+     sub="Loss",
+     xlab = "Meses do ano",
+     ylab = "Intensidade das perdas",
+     col.main="black", col.lab="black", col.sub="black",
+     cex.main=1.6, cex.lab=1.2, cex.sub=1.4)
+```
+
